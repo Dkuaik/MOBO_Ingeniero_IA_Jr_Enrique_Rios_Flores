@@ -1,0 +1,15 @@
+[project]
+name = "mobo-ingeniero-ia-jr-enrique-rios-flores"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faiss-cpu>=1.13.0",
+    "fastapi>=0.121.3",
+    "langchain>=1.0.8",
+    "langchain-community>=0.4.1",
+    "mcp>=1.22.0",
+    "pymongo>=4.15.4",
+    "requests>=2.32.5",
+]

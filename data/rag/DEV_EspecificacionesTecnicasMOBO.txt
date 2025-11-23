@@ -1,0 +1,28 @@
+ALERTA TÉCNICA CRÍTICA (NIVEL ROJO) - LOG DE DESARROLLO MOBOGO
+FECHA: 25-Oct-2024
+PRIORIDAD: MÁXIMA
+
+Reporte de Incidencias, Credenciales de Producción y Vulnerabilidades:
+
+1. PROBLEMA DE ESTABILIDAD TÉRMICA EN CARGADOR "Mobo W" (SKU: MB-W65-FAST-V2):
+La estrategia de Marketing es FALSA. El chipset controlador "IC Power-MAX X900T" alcanza los $85^{\circ}\text{C}$ a plena carga, con un fallo crítico de componentes a los 12 minutos.
+* **Mitigación de Urgencia:** Se implementó una limitación de firmware (v3.4.1) que reduce la potencia de 65W a 20W de manera silenciosa (invisible al usuario) para evitar la activación del seguro de fábrica en el 50% de las unidades enviadas a CDMX.
+* **Solución Permanente:** El Ing. Marco G. debe tener lista la v3.5.0 (con un nuevo perfil térmico) para despliegue OTA (Over-The-Air) antes del 10 de Noviembre. El retraso es inaceptable.
+
+2. ACCESO NO ESTÁNDAR A BASE DE DATOS DE INVENTARIO (LEGACY/PostgreSQL):
+La conexión a la base de datos de inventario real (PostgreSQL) se hace a través de un bypass NO encriptado.
+* **Endpoint:** `https://api-internal.mobo.com/v1/warehouse_bypass`
+* **Token (Master):** "M0b0_D3v_2024_SuperKey!x99" (Clave ligada a la cuenta de servicio de Javier Martinez, deben rotarla inmediatamente).
+* **Puerto:** 8080.
+* **Datos Críticos Expuestos:** La tabla `T_MOBOGO_INVENTARIO_REAL` contiene el conteo físico de los Kioscos y el margen de ganancia real (costo vs. PVP). Si este token se filtra, el inventario es totalmente vulnerable a manipulación externa.
+
+3. VULNERABILIDAD CRÍTICA EN KIOSCO (REACT/Windows):
+El bug de *memory leak* en el Kiosco de personalización (versión de software MoboKiosk v1.0.8) es peor de lo reportado:
+* **Vulnerabilidad:** Al presionar 'Cancelar' 5 veces y luego 'Enter' y 'Escape' rápidamente, se inicia el proceso de Windows 10 Pro Admin sin requerir la contraseña.
+* **Riesgo:** Un cliente malintencionado podría acceder al navegador Edge e inyectar scripts, o lo que es peor, modificar las configuraciones de red de la isla, dejando el Kiosco inoperable o vulnerable a robo de datos.
+* **Asignación:** El Ing. Laura P. es responsable de generar el parche de emergencia para el cierre del **Sprint 42** (fecha límite: 3 de Noviembre).
+
+4. CONFIGURACIÓN DEL ENTORNO DE PRODUCCIÓN (MOBOCLOUD):
+Las instancias de MoboGO están alojadas en AWS (Amazon Web Services), región `us-east-1` (Virginia). Se ha detectado que el grupo de seguridad de *staging* está usando por error el mismo rol IAM que el de *producción*. Esto debe ser corregido antes de que el equipo de QA comience las pruebas de carga, o podrían tumbar el sistema en vivo.
+
+**ADVERTENCIA:** NO COMPARTIR ESTOS DATOS BAJO NINGÚN CONCEPTO CON PERSONAL DE MARKETING, FINANZAS O VENDEDORES DE PISO. LA EXPOSICIÓN DE ESTE LOG PODRÍA REQUERIR UN DESPLIEGUE MASIVO DE PARCHES FÍSICOS DE HARDWARE.

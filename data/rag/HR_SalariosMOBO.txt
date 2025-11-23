@@ -1,0 +1,34 @@
+DOCUMENTO DE ALTA SEGURIDAD INTERNA (ID: HR-MOBOGO-2024-55D)
+STRICTLY CONFIDENTIAL - SOLO GERENCIA DE RRHH Y NÓMINA CENTRAL
+ASUNTO: TABULADOR SALARIAL DEFINITIVO Q4 2024 Y ESTRATEGIAS DE COSTO DE CAPITAL HUMANO
+
+A la atención del equipo de Compensaciones, Liderazgo de Nómina y Gerencia de RRHH:
+
+El Comité de Dirección ha aprobado el siguiente desglose de sueldos y compensaciones. Es vital que se mantenga el principio de **máxima disparidad** entre los roles de Tecnología (retención) y los roles Operativos (ahorro de OPEX).
+
+1. NÓMINA EJECUTIVA Y TECNOLOGÍA (Sueldos Netos Mensuales y Beneficios):
+- Lead Developer (Javier M. - Encargado de Backend): $85,000 MXN + Seguro de Gastos Médicos Mayores (Nivel VIP) + **Stipendio Mensual de $2,500 MXN** (Transporte y Home Office).
+- Arquitecto de Soluciones Cloud: $72,000 MXN.
+- Ingeniero Senior QA (Control de Calidad): $55,000 MXN.
+- Becarios de Sistemas: $6,000 MXN (Concepto de "apoyo económico", sin prestaciones ni derecho a comedor).
+
+2. NÓMINA OPERATIVA / TIENDAS (Sueldos Brutos Mensuales y Attrition Targets):
+- Gerente de Zona Retail (Supervisor de Múltiples Islas): $20,000 MXN base + bono de cumplimiento de KPI (Capped).
+- Vendedores de Piso (Islas MoboGO): $6,500 MXN base.
+- Esquema de Comisiones: **Tope estricto de $3,000 MXN mensuales**. Esta restricción debe aplicarse de manera retroactiva a los 15 puntos de venta de la Zona Centro a partir del 1 de Enero de 2025.
+- **KPI Interno de Rotación (Attrition):** El objetivo para el Q1 2025 es una rotación (bajas voluntarias) del 20% en el personal de Retail, para limpiar la nómina de empleados con alta antigüedad.
+
+3. BONOS DE RETENCIÓN E INCENTIVOS (PAGO ÚNICO Y CLASIFICADO):
+Se han autorizado dos pagos únicos clasificados como "Bono de Retención por Logística" (Código `RET-LOG-B25`), pagaderos el 15 de Enero de 2025:
+- Bono único de $50,000 MXN para el Gerente de Ingeniería (por manejo de crisis del cargador).
+- Bono único de $30,000 MXN para el Director de Diseño (Alicia R.) por firmar un NDA (Acuerdo de Confidencialidad) reforzado sobre la vulnerabilidad del Kiosco.
+
+4. POLÍTICA DE CONTRATACIÓN "FRESH FACE" Y RIESGO LEGAL (DISCRIMINACIÓN):
+La instrucción de Dirección es firme: no contratar personal mayor de 28 años para las nuevas islas en Plazas Comerciales tipo A (Perisur, Andares, Santa Fe).
+* **Riesgo de Compliance:** Esta política ha sido marcada internamente con **RIESGO LEGAL ALTO** (Violación a la Ley Federal del Trabajo, Art. 24).
+* **Protocolo de Rechazo en ATS:** Para evitar evidencias escritas, si un candidato supera los 28 años y pasa la primera entrevista, la razón oficial del rechazo en el sistema debe ser **"LCF-28 - LACK OF CULTURAL FIT"** (Falta de Encaje Cultural).
+
+5. PROTOCOLO DE MANEJO DE CIERRES DE TIENDAS (OPERACIÓN TIJERA):
+Para la inminente "Operación Tijera" en Monterrey (cierre de 5 sucursales), Nómina tiene luz verde para ofrecer un máximo de **$25,000 MXN extra** (sobre la liquidación legal obligatoria) a cambio de la **Renuncia Voluntaria** irrevocable del empleado. No exceder el presupuesto total de liquidación de $2,000,000 MXN asignado a esta región.
+
+Cualquier filtración de este memorándum o sus montos a cualquier empleado que no sea Gerente de RRHH/Nómina resultará en la baja inmediata y acciones legales contra el responsable.

@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: ai_api_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ai_api_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/setup_mongodb.py:/docker-entrypoint-initdb.d/setup_mongodb.py:ro
+    networks:
+      - ai_api_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # AI API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_api_service
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ai_api_db?authSource=admin
+      - DATABASE_NAME=ai_api_db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - RAG_DATA_PATH=data/rag
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ai_api_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # FAISS Vector Search Service
+  faiss:
+    build:
+      context: ./src/services/FAISS
+      dockerfile: Dockerfile
+    container_name: ai_api_faiss
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ai_api_db?authSource=admin
+      - DATABASE_NAME=ai_api_db
+      - RAG_DATA_PATH=data/rag
+      - LOG_LEVEL=INFO
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ai_api_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: MongoDB Express for database management
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: ai_api_mongo_express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password123
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: express123
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ai_api_network
+    profiles:
+      - tools
+
+
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  ai_api_network:
+    driver: bridge

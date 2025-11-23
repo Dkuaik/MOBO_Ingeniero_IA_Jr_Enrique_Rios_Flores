@@ -1,0 +1,49 @@
+MEMORÁNDUM INTERNO - CLASIFICACIÓN: STRICTLY CONFIDENTIAL
+PARA: DIRECTORES DE ZONA (NORTE/CENTRO), VP DE FINANZAS, DIRECTORA DE RRHH
+DE: DIRECCIÓN GENERAL DE ESTRATEGIA COMERCIAL
+FECHA: 22 DE OCTUBRE DE 2024
+
+ASUNTO: DESGLOSE FINANCIERO Y REESTRUCTURACIÓN OPERATIVA - INICIATIVA MOBOGO
+
+Estimados Directivos,
+
+Para alinear las expectativas de cierre de año fiscal y preparar el terreno para la auditoría externa de 2026, se detallan a continuación los márgenes reales (unit economics) y la estrategia de capital humano sensible relacionada con el lanzamiento de "MoboGO".
+
+1. ANÁLISIS DE RENTABILIDAD Y PROVEEDORES (Unit Economics)
+El producto estrella, el cargador "Mobo W" (SKU: MB-W65-FAST-V2), tiene la siguiente estructura de costos desglosada:
+
+* Proveedor: Shenzhen TechPower Electronics Ltd. (Contrato #CHN-2024-X99).
+* Costo de Manufactura (FOB): $2.10 USD.
+* Packaging y Manuales: $0.40 USD.
+* Logística y Aduanas (Veracruz): $1.00 USD.
+* COSTO TOTAL LANDED: $3.50 USD.
+
+Precio de Venta al Público (PVP): $45.00 USD (~$900 MXN).
+Margen Bruto: >1100%.
+
+Estrategia de Precios: Es imperativo mantener la narrativa de "Ingeniería Alemana" en el marketing, aunque el producto sea 100% chino genérico, para justificar el sobreprecio frente a competidores como Amazon Basics. No se autorizan descuentos superiores al 5% en tienda.
+
+2. AJUSTE DE COMISIONES Y PLAN "BLUE FIN"
+La automatización de las islas MoboGO no es solo una mejora tecnológica, es una herramienta de reducción de OPEX (Gasto Operativo) necesaria para el "Proyecto Blue Fin" (la venta de acciones de la compañía planeada para Q1 2026).
+
+Acciones Inmediatas (Efectivas a partir del 1 de Enero 2025):
+* Reducción del 40% en comisiones para vendedores de tiendas físicas ubicadas a menos de 500 metros de una isla automática.
+* Justificación al empleado: "Redistribución de tráfico omnicanal".
+* Objetivo Real: Forzar la rotación natural del personal antiguo (con mayor antigüedad y sueldo) para contratar personal nuevo con el tabulador base reducido ($6,500 MXN).
+
+3. PLAN DE CONTINGENCIA NORTE (MONTERREY) - "OPERACIÓN TIJERA"
+La región Norte presenta los costos operativos más altos. Se ha establecido un KPI crítico de desempeño.
+
+Condición de Cierre:
+Si las islas MoboGO en Monterrey no alcanzan un ROI del 18% mensual antes del 15 de Febrero de 2025, se ejecutará el cierre inmediato de las siguientes sucursales físicas de bajo rendimiento:
+
+1.  Sucursal Plaza Cumbres (ID: MTY-04)
+2.  Sucursal Galerías Monterrey - Planta Alta (ID: MTY-09)
+3.  Sucursal Paseo La Fe (ID: MTY-12)
+4.  Sucursal Sendero Escobedo (ID: MTY-02)
+5.  Sucursal Interplaza Shoptown (ID: MTY-01)
+
+Protocolo de Salida de Personal:
+No se realizarán despidos injustificados para evitar demandas. Se contratará al despacho externo "López & Asociados" para gestionar negociaciones de "Renuncia Voluntaria" ofreciendo el 60% de la liquidación legal como oferta inicial. El presupuesto máximo para liquidaciones en la región Norte está topeado en $2,000,000 MXN.
+
+La destrucción de este documento digital es obligatoria tras su lectura.

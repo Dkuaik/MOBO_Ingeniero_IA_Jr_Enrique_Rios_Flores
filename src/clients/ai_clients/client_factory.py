@@ -45,35 +45,5 @@ class AIClientFactory:
             raise ValueError(f"Unsupported AI provider: {provider}. Supported: openai, claude, openrouter")
 
 
-# Example usage demonstrating dependency injection
-def use_ai_client(client: AIClient, prompt: str) -> str:
-    """
-    Function that uses any AI client through the interface.
-    This demonstrates how the interface allows decoupling from specific implementations.
-
-    Args:
-        client (AIClient): The injected AI client.
-        prompt (str): The prompt to send.
-
-    Returns:
-        str: The generated response.
-    """
-    return client.generate_text(prompt)
-
-
-# Example of injecting different clients
 if __name__ == "__main__":
-    # Inject OpenRouter client
-    openrouter_client = AIClientFactory.create_client("openrouter")
-    response1 = use_ai_client(openrouter_client, "Hello from OpenRouter!")
-    print("OpenRouter:", response1)
-
-    # Inject OpenAI client
-    openai_client = AIClientFactory.create_client("openai", model="gpt-4")
-    response2 = use_ai_client(openai_client, "Hello from OpenAI!")
-    print("OpenAI:", response2)
-
-    # Inject Claude client
-    claude_client = AIClientFactory.create_client("claude")
-    response3 = use_ai_client(claude_client, "Hello from Claude!")
-    print("Claude:", response3)
+   pass

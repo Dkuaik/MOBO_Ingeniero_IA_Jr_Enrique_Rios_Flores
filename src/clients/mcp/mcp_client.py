@@ -2,6 +2,7 @@ import asyncio
 from mcp.client.session import ClientSession
 from mcp.client.sse import sse_client
 
+#Definición del cliente para el mcp
 class MCPClient:
     def __init__(self, url: str = "http://mcp:8003/sse"):
         self.url = url

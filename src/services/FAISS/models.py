@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from typing import List, Tuple, Dict, Any
+from typing import List, Dict, Any
 
-
+# Modelos de los datos del servicio de FAISS
 
 class VectorData(BaseModel):
     id: str

@@ -12,13 +12,13 @@ from models import *
 
 app = FastAPI(title="FAISS Microservice", version="1.0.0")
 
-# In-memory FAISS index (basic implementation)
-# Using IndexFlatIP for inner product (cosine similarity with normalized vectors)
-dimension = 384  # Embedding dimension for sentence-transformers
+# Servidor y exposición de los enpoints del servicio de FAISS
+
+dimension = 384  
 index = faiss.IndexFlatIP(dimension)
-id_to_vector = {}  # Map IDs to vectors
-vector_to_id = {}  # Map vector indices to IDs
-id_to_metadata = {}  # Map IDs to metadata
+id_to_vector = {}  
+vector_to_id = {}  
+id_to_metadata = {}  
 next_id = 0
 
 

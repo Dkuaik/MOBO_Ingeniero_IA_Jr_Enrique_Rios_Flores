@@ -5,15 +5,15 @@ from sentence_transformers import SentenceTransformer
 from clients.faiss.faiss_client import FAISSClient
 from clients.mongodb.mongodb_client import MongoDBClient
 from services.database.models.document_model import Document
-from config.settings import MONGODB_URI, DATABASE_NAME, RAG_DATA_PATH
+from config.settings import MONGODB_URI, DATABASE_NAME, RAG_DATA_PATH,ROLE_MAPPING
 
 
 
-# Configuration for chunking
-MAX_CHUNK_SIZE = 1000  # Maximum characters per chunk
-OVERLAP_SIZE = 200     # Characters of overlap between chunks
+# Configuración de los chunks
+MAX_CHUNK_SIZE = 1000  # Maximos caracteres por chunk
+OVERLAP_SIZE = 200     # Caracteres de overlap entre chunks
 
-# Role to role_id mapping
+# Podemos importarlos de settings
 ROLE_MAPPING = {
     "ADMIN": 1,
     "DEV": 2,
@@ -28,8 +28,6 @@ def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
     while start < len(text):
         end = start + max_chunk_size
         if end < len(text):
-            # Find a good break point (sentence end or space)
-            # For simplicity, just cut at max_chunk_size
             chunk = text[start:end]
         else:
             chunk = text[start:]
@@ -40,44 +38,44 @@ def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
     return chunks
 
 def load_embeddings(faiss_url: str = "http://localhost:8001"):
-    # Initialize the sentence transformer model
+    # Inicialización del modelo de embeddings
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    # Initialize clients
+    # Clientes para cargar embedings y los datos
     faiss_client = FAISSClient(base_url=faiss_url)
     mongo_client = MongoDBClient(uri=MONGODB_URI, database_name=DATABASE_NAME)
 
-    # Directory containing the documents
+    # directorio de los documentos a procesar
     data_dir = RAG_DATA_PATH
 
-    # Process each document
+    # Procesado de los docuemntos
     for filename in os.listdir(data_dir):
         if filename.endswith('.txt'):
             filepath = os.path.join(data_dir, filename)
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read().strip()
 
-            # Extract role from filename
+            # Extracción del nombre del docuemnto
             role = filename.split('_')[0]
             role_id = ROLE_MAPPING.get(role)
 
-            # Split content into chunks with overlap
+            # Generación de los chunks
             chunks = split_text_with_overlap(content, MAX_CHUNK_SIZE, OVERLAP_SIZE)
 
             print(f"Processing {filename}: {len(chunks)} chunks")
 
-            # Process each chunk
+            # Procesado por cada chunk
             for chunk_idx, chunk in enumerate(chunks):
-                # Generate embedding for the chunk
+                # Generación de embedding
                 embedding = model.encode(chunk).tolist()
 
-                # Create unique ID for the chunk
+                # id
                 chunk_id = f"{filename}_{chunk_idx + 1}"
 
-                # Add to FAISS
+                # Se agrega a faiss
                 faiss_client.add_vector(chunk_id, embedding, metadata={'role_id': role_id})
 
-                # Save chunk to MongoDB
+                # Se grarnda en mongoDB para futuras referencias
                 Document.create_document(
                     mongo_client,
                     title=f"{filename} - Chunk {chunk_idx + 1}",

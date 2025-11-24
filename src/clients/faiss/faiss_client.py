@@ -9,9 +9,9 @@ from clients.mongodb.mongodb_client import MongoDBClient
 from services.database.models.document_model import Document
 from config.settings import MONGODB_URI, DATABASE_NAME, RAG_DATA_PATH, ROLE_MAPPING
 
-# Configuration for chunking
-MAX_CHUNK_SIZE = 1000  # Maximum characters per chunk
-OVERLAP_SIZE = 200     # Characters of overlap between chunks
+# Configuración de los embeddings
+MAX_CHUNK_SIZE = 1000  # Numero máximo de caracteres por chunk
+OVERLAP_SIZE = 200     # Numero de caracteres de overlap
 
 def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
     """Split text into chunks with overlap."""
@@ -20,8 +20,6 @@ def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
     while start < len(text):
         end = start + max_chunk_size
         if end < len(text):
-            # Find a good break point (sentence end or space)
-            # For simplicity, just cut at max_chunk_size
             chunk = text[start:end]
         else:
             chunk = text[start:]
@@ -31,6 +29,7 @@ def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
             break
     return chunks
 
+# Definición del cliente con le cual nos vamos a comunicar con el servicio de FAISS
 class FAISSClient:
     """FAISS client for vector similarity search operations."""
 

@@ -126,6 +126,3 @@ class OpenRouterClient(AIClient):
 # Example usage
 if __name__ == "__main__":
     client = OpenRouterClient()
-    prompt = "Hello, how are you?"
-    response = client.generate_text(prompt)
-    print(response)

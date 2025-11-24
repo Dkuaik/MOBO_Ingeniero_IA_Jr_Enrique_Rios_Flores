@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+#Cliente Clasico para comunicarnos con el servicio de mongo DB
 class MongoDBClient:
     """MongoDB client for database operations in the AI API project."""
 

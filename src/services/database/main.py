@@ -22,20 +22,20 @@ def initialize_database():
     print("Initializing MongoDB database...")
 
     try:
-        # Create MongoDB client
+        # Cliente de mongo db para comunicación
         db_client = MongoDBClient(uri=MONGODB_URI, database_name=DATABASE_NAME)
 
-        # Create sample user
+        # Creación de un user
         print("Creating sample user...")
         sample_user = User.create_user(
             db_client=db_client,
             username="admin",
             email="admin@aiapi.com",
-            password_hash="hashed_password_here"  # In production, use proper hashing
+            password_hash="123" 
         )
         print(f"Created user: {sample_user.username}")
 
-        # Load sample documents from RAG data
+        # Carga de algunos docs dummy
         print("Loading sample documents...")
         rag_path = Path(project_root) / RAG_DATA_PATH
         if rag_path.exists():

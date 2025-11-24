@@ -70,6 +70,4 @@ class OpenAIClient(AIClient):
 # Example usage
 if __name__ == "__main__":
     client = OpenAIClient()
-    prompt = "Hello, how are you?"
-    response = client.generate_text(prompt)
-    print(response)
+    

@@ -123,6 +123,7 @@ async def chat_interface():
     """
     return html
 
+
 @app.post("/chat")
 async def chat(request: Request):
     data = await request.json()
@@ -130,12 +131,12 @@ async def chat(request: Request):
     rag_role = data.get('rag_role', '')
     use_mcp = data.get('use_mcp', False)
     
-    # Get AI response
-    client = AIClientFactory.create_client("openrouter")  # Default to openrouter
+    # Creación del cliente de IA con OpenRouter
+    client = AIClientFactory.create_client("openrouter") 
     
     prompt = message
     
-    # Add RAG context if enabled
+    # Funcionalidad de RAG con los clientes
     if rag_role:
         try:
             print(f"DEBUG: Initializing FAISS client with base_url='http://faiss:8001'")
@@ -152,9 +153,10 @@ async def chat(request: Request):
             print(f"DEBUG: RAG error occurred: {str(e)}")
             prompt += f"\\n(RAG error: {str(e)})"
     
-    # Add MCP tools if enabled
+    # Funcionalidad de MCP con clientes
     tools = None
     if use_mcp:
+        #Definición de las tools (Se puede hacer más automatico con un metodo OPTIONS)
         tools = [
             {
                 "type": "function",
@@ -175,7 +177,7 @@ async def chat(request: Request):
     except Exception as e:
         response = f"Error: {str(e)}"
 
-    # Save interaction to MongoDB
+    # Guardado de la interacción
     mongo_client = MongoDBClient(uri=MONGODB_URI, database_name=DATABASE_NAME)
     interaction = {
         "timestamp": datetime.now(timezone.utc),

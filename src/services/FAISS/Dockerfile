@@ -19,5 +19,5 @@ COPY . .
 # Expose port
 EXPOSE 8001
 
-# Run the application
-CMD ["python", "main.py"]
+# Run load_embeddings first, then the application
+CMD ["sh", "-c", " python main.py && python load_embeddings.py"]

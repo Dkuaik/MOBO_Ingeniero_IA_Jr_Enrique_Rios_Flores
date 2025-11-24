@@ -1,0 +1,233 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e5727485-f150-449b-8a80-58120a201de6",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://open.er-api.com/v6/latest/USD",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0d26200f-d590-431d-a56d-9ee394386944",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3565c170-b07d-48f8-b818-e487626d3991",
+              "leftValue": "={{ $json.result }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "ff57f4ca-bb0c-4802-a6cc-59a5cf28eea5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fromEmail": "enrq.rios.f@gmail.com",
+        "toEmail": "alert@example.com",
+        "subject": "External API Error",
+        "html": "There's a problem with the external api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        848,
+        96
+      ],
+      "id": "447db680-abca-414c-adee-4eb719c8769f",
+      "name": "Send email",
+      "webhookId": "7bf41245-e28a-4d68-8992-fff5e4f235fc"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        -96
+      ],
+      "id": "bb075c1f-b103-4fd2-a8b8-9192f6e30283",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82424e46-fd10-4b6b-849b-bee475bd9b52",
+              "name": "result",
+              "value": "={{ $json.result }}",
+              "type": "string"
+            },
+            {
+              "id": "72cb54b4-121b-4c47-baf1-3d9aaa3fade1",
+              "name": "time_last_update_unix",
+              "value": "={{ $json.time_last_update_unix }}",
+              "type": "number"
+            },
+            {
+              "id": "fdf553d3-9078-4f1b-9576-75acef853016",
+              "name": "base_code",
+              "value": "={{ $json.base_code }}",
+              "type": "string"
+            },
+            {
+              "id": "347d6444-5e52-4d2a-9b0f-684969c876aa",
+              "name": "MXN",
+              "value": "={{ $json.rates.MXN }}",
+              "type": "number"
+            },
+            {
+              "id": "62fe0eb7-6ffd-487e-b4d6-125b3232530c",
+              "name": "timestamp",
+              "value": "={{ $('Schedule Trigger').item.json.timestamp }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "dd9d4122-189c-4c2f-91d4-9c40ae01103a",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6220a5f4-7208-4938-8f51-e80e46d783d7",
+  "meta": {
+    "instanceId": "31b4331e308263906c8c356453e7f6202325e399509c390cf63d5fa85e5ea34e"
+  },
+  "id": "FgHlyId0aYcLRxX1",
+  "tags": []
+}

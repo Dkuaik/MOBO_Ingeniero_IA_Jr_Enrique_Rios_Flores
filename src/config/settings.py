@@ -19,7 +19,7 @@ API_PORT = int(os.getenv("API_PORT", "8000"))
 # AI Client Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = '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'
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash")
 
 # Embedding Configuration

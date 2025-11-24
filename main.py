@@ -107,14 +107,18 @@ async def chat(request: Request):
     # Add RAG context if enabled
     if rag_role:
         try:
+            print(f"DEBUG: Initializing FAISS client with base_url='http://faiss:8001'")
             model = SentenceTransformer('all-MiniLM-L6-v2')
             query_vector = model.encode(message).tolist()
             faiss_client = FAISSClient(base_url="http://faiss:8001")
+            print(f"DEBUG: FAISS client created, attempting search with role_id={ROLE_MAPPING.get(rag_role, 4)}")
             role_id = ROLE_MAPPING.get(rag_role, 4)  # Default to ALL if not found
             results = faiss_client.search_similar(query_vector, k=5, role_id=role_id)
+            print(f"DEBUG: FAISS search successful, found {len(results)} results")
             context = "\\n".join([f"Doc {i+1}: {res['id']} (score: {res['score']:.3f})" for i, res in enumerate(results)])
             prompt = f"Context from {rag_role} docs:\\n{context}\\n\\nUser: {message}"
         except Exception as e:
+            print(f"DEBUG: RAG error occurred: {str(e)}")
             prompt += f"\\n(RAG error: {str(e)})"
     
     # Add MCP tools if enabled

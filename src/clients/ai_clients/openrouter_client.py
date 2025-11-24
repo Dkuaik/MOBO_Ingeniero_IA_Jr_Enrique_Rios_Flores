@@ -36,24 +36,14 @@ class OpenRouterClient(AIClient):
             str: The generated text response.
         """
         try:
-            messages = [{"role": "user", "content": prompt}]
-            kwargs = {
-                "model": self.model,
-                "messages": messages,
-                "max_tokens": max_tokens,
-                "temperature": temperature
-            }
-            if tools:
-                kwargs["tools"] = tools
-                kwargs["tool_choice"] = "auto"
-
-            response = self.client.chat.completions.create(**kwargs)
-
-            # Handle tool calls
-            if hasattr(response.choices[0].message, 'tool_calls') and response.choices[0].message.tool_calls:
-                return self._handle_tool_calls(response.choices[0].message.tool_calls, messages)
-            else:
-                return response.choices[0].message.content
+            # For Gemini models, use completions API with prompt
+            response = self.client.completions.create(
+                model=self.model,
+                prompt=prompt,
+                max_tokens=max_tokens,
+                temperature=temperature
+            )
+            return response.choices[0].text
         except Exception as e:
             raise Exception(f"Error generating text with OpenRouter: {str(e)}")
 

@@ -1,7 +1,7 @@
 [project]
 name = "mobo-ingeniero-ia-jr-enrique-rios-flores"
 version = "0.1.0"
-description = "Add your description here"
+description = "Prueba tecnica para Ingeniero de IA en MOBO"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

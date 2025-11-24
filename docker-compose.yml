@@ -81,6 +81,34 @@ services:
       retries: 3
       start_period: 40s
 
+  # Chat Interface Service
+  chat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_api_chat
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ai_api_db?authSource=admin
+      - DATABASE_NAME=ai_api_db
+      - API_HOST=0.0.0.0
+      - API_PORT=3000
+      - RAG_DATA_PATH=docs
+      - LOG_LEVEL=INFO
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      faiss:
+        condition: service_started
+    networks:
+      - ai_api_network
+    command: ["uv", "run", "python", "main.py"]
+
   # MCP Server Service
   mcp:
     build:

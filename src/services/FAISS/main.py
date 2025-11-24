@@ -18,6 +18,7 @@ dimension = 384  # Embedding dimension for sentence-transformers
 index = faiss.IndexFlatIP(dimension)
 id_to_vector = {}  # Map IDs to vectors
 vector_to_id = {}  # Map vector indices to IDs
+id_to_metadata = {}  # Map IDs to metadata
 next_id = 0
 
 
@@ -43,6 +44,7 @@ async def add_vector(data: VectorData):
     # Store mapping
     id_to_vector[data.id] = vector
     vector_to_id[next_id] = data.id
+    id_to_metadata[data.id] = data.metadata
     next_id += 1
 
     return {"message": f"Vector with ID '{data.id}' added successfully"}
@@ -70,7 +72,9 @@ async def search_similar(query: SearchQuery):
     for score, idx in zip(D[0], I[0]):
         if idx != -1:  # Valid result
             result_id = vector_to_id.get(idx, "unknown")
-            results.append(SearchResult(id=result_id, score=float(score)))
+            metadata = id_to_metadata.get(result_id, {})
+            if metadata.get('role_id') == query.role_id:
+                results.append(SearchResult(id=result_id, score=float(score), metadata=metadata))
 
     return results
 
@@ -86,7 +90,7 @@ async def get_status():
 @app.get("/get_all")
 async def get_all_vectors():
     """Get all vectors in the index."""
-    return {"vectors": [{"id": vector_to_id[i], "vector": id_to_vector[vector_to_id[i]].tolist()} for i in range(next_id) if i in vector_to_id]}
+    return {"vectors": [{"id": vector_to_id[i], "vector": id_to_vector[vector_to_id[i]].tolist(), "metadata": id_to_metadata.get(vector_to_id[i], {})} for i in range(next_id) if i in vector_to_id]}
 
 @app.get("/get_all_id")
 async def get_all_ids():
@@ -96,10 +100,11 @@ async def get_all_ids():
 @app.delete("/clear")
 async def clear_index():
     """Clear all vectors from the index."""
-    global index, id_to_vector, vector_to_id, next_id
+    global index, id_to_vector, vector_to_id, id_to_metadata, next_id
     index = faiss.IndexFlatIP(dimension)
     id_to_vector = {}
     vector_to_id = {}
+    id_to_metadata = {}
     next_id = 0
     return {"message": "Index cleared"}
 

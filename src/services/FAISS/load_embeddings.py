@@ -75,7 +75,7 @@ def load_embeddings():
                 chunk_id = f"{filename}_{chunk_idx + 1}"
 
                 # Add to FAISS
-                faiss_client.add_vector(chunk_id, embedding)
+                faiss_client.add_vector(chunk_id, embedding, metadata={'role_id': role_id})
 
                 # Save chunk to MongoDB
                 Document.create_document(

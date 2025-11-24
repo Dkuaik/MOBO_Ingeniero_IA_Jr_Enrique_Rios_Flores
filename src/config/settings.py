@@ -36,3 +36,10 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-jwt-secret-key")
 
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
+ROLE_MAPPING = {
+    "ADMIN": 1,
+    "DEV": 2,
+    "HR": 3,
+    "ALL": 4
+}

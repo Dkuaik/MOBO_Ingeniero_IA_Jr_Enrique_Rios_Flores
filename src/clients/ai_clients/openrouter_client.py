@@ -22,7 +22,7 @@ class OpenRouterClient(AIClient):
         )
         self.model = OPENROUTER_MODEL
 
-    def generate_text(self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7) -> str:
+    def generate_text(self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7, tools=None) -> str:
         """
         Generate text using the configured OpenRouter model.
 
@@ -30,20 +30,53 @@ class OpenRouterClient(AIClient):
             prompt (str): The input prompt for text generation.
             max_tokens (int): Maximum number of tokens to generate.
             temperature (float): Sampling temperature for generation.
+            tools: Optional tools for function calling.
 
         Returns:
             str: The generated text response.
         """
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=max_tokens,
-                temperature=temperature
-            )
-            return response.choices[0].message.content
+            messages = [{"role": "user", "content": prompt}]
+            kwargs = {
+                "model": self.model,
+                "messages": messages,
+                "max_tokens": max_tokens,
+                "temperature": temperature
+            }
+            if tools:
+                kwargs["tools"] = tools
+                kwargs["tool_choice"] = "auto"
+
+            response = self.client.chat.completions.create(**kwargs)
+
+            # Handle tool calls
+            if hasattr(response.choices[0].message, 'tool_calls') and response.choices[0].message.tool_calls:
+                return self._handle_tool_calls(response.choices[0].message.tool_calls, messages)
+            else:
+                return response.choices[0].message.content
         except Exception as e:
             raise Exception(f"Error generating text with OpenRouter: {str(e)}")
+
+    def _handle_tool_calls(self, tool_calls, messages):
+        """Handle tool calls by executing them and continuing the conversation."""
+        from src.clients.mcp.mcp_client import MCPClient
+        import asyncio
+        import json
+
+        results = []
+        for tool_call in tool_calls:
+            if tool_call.function.name == "get_usd_price":
+                # Execute the tool
+                mcp_client = MCPClient()
+                try:
+                    usd_data = asyncio.run(mcp_client.get_usd_price())
+                    results.append(f"USD rates: {usd_data}")
+                except Exception as e:
+                    results.append(f"Error getting USD rates: {str(e)}")
+            else:
+                results.append(f"Unknown tool: {tool_call.function.name}")
+
+        return "\n".join(results)
 
     def chat_completion(self, messages: list, **kwargs) -> dict:
         """

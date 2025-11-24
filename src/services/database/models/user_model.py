@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from clients.mongodb.mongodb_client import MongoDBClient
 
 class User:
@@ -9,8 +9,8 @@ class User:
         self.username = username
         self.email = email
         self.password_hash = password_hash
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
 
     @classmethod
     def from_dict(cls, data: dict):

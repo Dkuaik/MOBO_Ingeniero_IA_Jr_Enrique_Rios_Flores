@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from clients.mongodb.mongodb_client import MongoDBClient
 
 class Document:
@@ -11,8 +11,8 @@ class Document:
         self.source = source or "unknown"
         self.metadata = metadata or {}
         self.role_id = role_id
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
 
     @classmethod
     def from_dict(cls, data: dict):

@@ -8,8 +8,10 @@ sys.path.insert(0, 'src')
 from clients.ai_clients.client_factory import AIClientFactory
 from clients.faiss.faiss_client import FAISSClient
 from clients.mcp.mcp_client import MCPClient
-from config.settings import MONGODB_URI, DATABASE_NAME
+from clients.mongodb.mongodb_client import MongoDBClient
+from config.settings import MONGODB_URI, DATABASE_NAME, ROLE_MAPPING
 from sentence_transformers import SentenceTransformer
+from datetime import datetime, timezone
 
 app = FastAPI(title="MOBO Chat Interface")
 
@@ -108,26 +110,48 @@ async def chat(request: Request):
             model = SentenceTransformer('all-MiniLM-L6-v2')
             query_vector = model.encode(message).tolist()
             faiss_client = FAISSClient(base_url="http://faiss:8001")
-            results = faiss_client.search_similar(query_vector, k=3)
+            role_id = ROLE_MAPPING.get(rag_role, 4)  # Default to ALL if not found
+            results = faiss_client.search_similar(query_vector, k=5, role_id=role_id)
             context = "\\n".join([f"Doc {i+1}: {res['id']} (score: {res['score']:.3f})" for i, res in enumerate(results)])
             prompt = f"Context from {rag_role} docs:\\n{context}\\n\\nUser: {message}"
         except Exception as e:
             prompt += f"\\n(RAG error: {str(e)})"
     
-    # Add MCP data if enabled
+    # Add MCP tools if enabled
+    tools = None
     if use_mcp:
-        mcp_client = MCPClient()
-        try:
-            usd_data = await mcp_client.get_usd_price()
-            prompt += f"\\n\\nCurrent USD rates: {usd_data}"
-        except Exception as e:
-            prompt += f"\\n(MCP error: {str(e)})"
-    
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_usd_price",
+                    "description": "Get the current USD exchange rates from open.er-api.com",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {},
+                        "required": []
+                    }
+                }
+            }
+        ]
+
     try:
-        response = client.generate_text(prompt)
+        response = client.generate_text(prompt, tools=tools)
     except Exception as e:
         response = f"Error: {str(e)}"
-    
+
+    # Save interaction to MongoDB
+    mongo_client = MongoDBClient(uri=MONGODB_URI, database_name=DATABASE_NAME)
+    interaction = {
+        "timestamp": datetime.now(timezone.utc),
+        "user_message": message,
+        "rag_role": rag_role,
+        "use_mcp": use_mcp,
+        "prompt": prompt,
+        "response": response
+    }
+    mongo_client.insert_document("interactions", interaction)
+
     return {"response": response}
 
 if __name__ == "__main__":

@@ -9,23 +9,25 @@ class FAISSClient:
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
 
-    def add_vector(self, vector_id: str, vector: List[float]) -> Dict[str, Any]:
+    def add_vector(self, vector_id: str, vector: List[float], metadata: Dict[str, Any] = None) -> Dict[str, Any]:
         """Add a vector to the FAISS index."""
         url = f"{self.base_url}/add_vector"
         data = {
             "id": vector_id,
-            "vector": vector
+            "vector": vector,
+            "metadata": metadata or {}
         }
         response = self.session.post(url, json=data)
         response.raise_for_status()
         return response.json()
 
-    def search_similar(self, query_vector: List[float], k: int = 5) -> List[Dict[str, Any]]:
+    def search_similar(self, query_vector: List[float], k: int = 5, role_id: int = 4) -> List[Dict[str, Any]]:
         """Search for similar vectors in the index."""
         url = f"{self.base_url}/search"
         data = {
             "vector": query_vector,
-            "k": k
+            "k": k,
+            "role_id": role_id
         }
         response = self.session.post(url, json=data)
         response.raise_for_status()
@@ -50,7 +52,7 @@ class FAISSClient:
         results = []
         for data in vectors_data:
             try:
-                result = self.add_vector(data["id"], data["vector"])
+                result = self.add_vector(data["id"], data["vector"], data.get("metadata", {}))
                 results.append(result)
             except Exception as e:
                 results.append({"error": str(e), "id": data.get("id", "unknown")})

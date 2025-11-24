@@ -119,7 +119,7 @@ services:
     environment:
       - LOG_LEVEL=INFO
     ports:
-      - "8002:8002"
+      - "8002:8003"
     networks:
       - ai_api_network
 

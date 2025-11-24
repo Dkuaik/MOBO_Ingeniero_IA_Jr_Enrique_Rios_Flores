@@ -20,7 +20,7 @@ API_PORT = int(os.getenv("API_PORT", "8000"))
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 OPENROUTER_API_KEY = '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'
-OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "x-ai/grok-code-fast-1")
 
 # Embedding Configuration
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002")

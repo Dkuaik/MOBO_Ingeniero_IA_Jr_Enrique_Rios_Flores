@@ -16,4 +16,4 @@ async def get_usd_price():
         return f"Error fetching USD price: {str(e)}"
 
 if __name__ == "__main__":
-    uvicorn.run(app.sse_app, host="0.0.0.0", port=8003)
+    uvicorn.run(app.sse_app(), host="0.0.0.0", port=8003)

@@ -36,37 +36,70 @@ class OpenRouterClient(AIClient):
             str: The generated text response.
         """
         try:
-            # For Gemini models, use completions API with prompt
-            response = self.client.completions.create(
-                model=self.model,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temperature=temperature
-            )
-            return response.choices[0].text
+            if tools:
+                # Use chat completions for tool support
+                messages = [{"role": "user", "content": prompt}]
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    tools=tools,
+                    tool_choice="auto"
+                )
+                message = response.choices[0].message
+                if message.tool_calls:
+                    tool_results = self._handle_tool_calls(message.tool_calls)
+                    # Add assistant message with tool calls
+                    messages.append(message)
+                    # Add tool results for each call
+                    for i, tool_call in enumerate(message.tool_calls):
+                        messages.append({
+                            "role": "tool",
+                            "tool_call_id": tool_call.id,
+                            "content": tool_results[i] if i < len(tool_results) else "Error: No result"
+                        })
+                    # Get final response
+                    final_response = self.client.chat.completions.create(
+                        model=self.model,
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature
+                    )
+                    return final_response.choices[0].message.content
+                else:
+                    return message.content
+            else:
+                # Use completions API for simple text generation
+                response = self.client.completions.create(
+                    model=self.model,
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature
+                )
+                return response.choices[0].text
         except Exception as e:
             raise Exception(f"Error generating text with OpenRouter: {str(e)}")
 
-    def _handle_tool_calls(self, tool_calls, messages):
-        """Handle tool calls by executing them and continuing the conversation."""
-        from src.clients.mcp.mcp_client import MCPClient
-        import asyncio
-        import json
+    def _handle_tool_calls(self, tool_calls):
+        """Handle tool calls by executing them and returning results per call."""
+        import requests
 
         results = []
         for tool_call in tool_calls:
             if tool_call.function.name == "get_usd_price":
-                # Execute the tool
-                mcp_client = MCPClient()
+                # Execute the tool directly
                 try:
-                    usd_data = asyncio.run(mcp_client.get_usd_price())
-                    results.append(f"USD rates: {usd_data}")
+                    response = requests.get("https://open.er-api.com/v6/latest/USD")
+                    response.raise_for_status()
+                    data = response.json()
+                    results.append(f"USD rates: {data}")
                 except Exception as e:
                     results.append(f"Error getting USD rates: {str(e)}")
             else:
                 results.append(f"Unknown tool: {tool_call.function.name}")
 
-        return "\n".join(results)
+        return results
 
     def chat_completion(self, messages: list, **kwargs) -> dict:
         """

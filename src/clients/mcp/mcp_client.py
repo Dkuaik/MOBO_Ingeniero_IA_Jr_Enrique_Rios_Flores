@@ -3,7 +3,7 @@ from mcp.client.session import ClientSession
 from mcp.client.sse import sse_client
 
 class MCPClient:
-    def __init__(self, url: str = "http://localhost:8002"):
+    def __init__(self, url: str = "http://mcp:8003/sse"):
         self.url = url
 
     async def get_usd_price(self):

@@ -19,13 +19,15 @@ API_PORT = int(os.getenv("API_PORT", "8000"))
 # AI Client Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+OPENROUTER_API_KEY = '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'
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash")
 
 # Embedding Configuration
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002")
 EMBEDDING_DIMENSION = int(os.getenv("EMBEDDING_DIMENSION", "1536"))
 
 # RAG Configuration
-RAG_DATA_PATH = os.getenv("RAG_DATA_PATH", "data/rag")
+RAG_DATA_PATH = os.getenv("RAG_DATA_PATH", "docs")
 MAX_RETRIEVED_DOCUMENTS = int(os.getenv("MAX_RETRIEVED_DOCUMENTS", "5"))
 
 # Security

@@ -13,7 +13,13 @@ from config.settings import MONGODB_URI, DATABASE_NAME, RAG_DATA_PATH
 MAX_CHUNK_SIZE = 1000  # Maximum characters per chunk
 OVERLAP_SIZE = 200     # Characters of overlap between chunks
 
-ROL=["ALL","DEV","HR"]
+# Role to role_id mapping
+ROLE_MAPPING = {
+    "ADMIN": 1,
+    "DEV": 2,
+    "HR": 3,
+    "ALL": 4
+}
 
 def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
     """Split text into chunks with overlap."""
@@ -51,6 +57,10 @@ def load_embeddings():
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read().strip()
 
+            # Extract role from filename
+            role = filename.split('_')[0]
+            role_id = ROLE_MAPPING.get(role)
+
             # Split content into chunks with overlap
             chunks = split_text_with_overlap(content, MAX_CHUNK_SIZE, OVERLAP_SIZE)
 
@@ -78,7 +88,8 @@ def load_embeddings():
                         'chunk_index': chunk_idx,
                         'total_chunks': len(chunks),
                         'original_file': filename
-                    }
+                    },
+                    role_id=role_id
                 )
 
                 print(f"Processed chunk: {chunk_id}")

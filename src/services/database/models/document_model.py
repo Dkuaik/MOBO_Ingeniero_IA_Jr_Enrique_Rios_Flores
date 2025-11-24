@@ -4,12 +4,13 @@ from clients.mongodb.mongodb_client import MongoDBClient
 class Document:
     collection_name = "documents"
 
-    def __init__(self, title: str, content: str, source: str = None, metadata: dict = None, _id=None):
+    def __init__(self, title: str, content: str, source: str = None, metadata: dict = None, role_id: int = None, _id=None):
         self._id = _id
         self.title = title
         self.content = content
         self.source = source or "unknown"
         self.metadata = metadata or {}
+        self.role_id = role_id
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
 
@@ -20,6 +21,7 @@ class Document:
             content=data.get('content'),
             source=data.get('source'),
             metadata=data.get('metadata', {}),
+            role_id=data.get('role_id'),
             _id=data.get('_id')
         )
 
@@ -29,6 +31,7 @@ class Document:
             'content': self.content,
             'source': self.source,
             'metadata': self.metadata,
+            'role_id': self.role_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -37,7 +40,7 @@ class Document:
         return data
 
     @staticmethod
-    def create_document(db_client: MongoDBClient, title: str, content: str, source: str = None, metadata: dict = None):
+    def create_document(db_client: MongoDBClient, title: str, content: str, source: str = None, metadata: dict = None, role_id: int = None):
         # Get next sequential ID
         counters_collection = db_client.get_collection('counters')
         counter = counters_collection.find_one_and_update(
@@ -48,7 +51,7 @@ class Document:
         )
         doc_id = counter['seq']
 
-        doc = Document(title, content, source, metadata, _id=doc_id)
+        doc = Document(title, content, source, metadata, role_id, _id=doc_id)
         collection = db_client.get_collection(Document.collection_name)
         result = collection.insert_one(doc.to_dict())
         return doc

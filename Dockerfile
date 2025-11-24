@@ -29,7 +29,7 @@ COPY main.py ./
 COPY scripts/ ./scripts/
 
 # Create data directory
-RUN mkdir -p data/rag
+RUN mkdir -p docs
 
 # Expose port
 EXPOSE 8000

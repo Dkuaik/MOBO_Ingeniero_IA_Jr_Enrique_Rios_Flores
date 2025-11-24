@@ -1,0 +1,256 @@
+{
+  "name": "MOBO_Enrique_Rios_Flores",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "df4d1496-9e01-41bb-8526-da0ce61f8335",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://open.er-api.com/v6/latest/USD",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ad4381a6-8efa-400f-80d4-b3dfb4ec75fa",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Necesito que generes un resumen de lo que ves de la salida del api, es para una prueba tecnica, tienes que recibir los datos y hacer obvio que los tienes. \nagrega comentarios."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "123398dc-bdfd-4334-8f5b-43e01329cce5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18zS26dRR8MwZrpo3FAYFDfvyWfN2-xdI3IrXCpcsVxU",
+          "mode": "list",
+          "cachedResultName": "MOBO_Enrique_Rios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18zS26dRR8MwZrpo3FAYFDfvyWfN2-xdI3IrXCpcsVxU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Comentarios_API",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18zS26dRR8MwZrpo3FAYFDfvyWfN2-xdI3IrXCpcsVxU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        0
+      ],
+      "id": "1f5f8c44-8560-4823-bf58-ca2702eadaeb",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6qBTxHLlyathHxPI",
+          "name": "Personal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        416,
+        384
+      ],
+      "id": "4434efb2-e961-4a51-ad80-86ff6dbedf07",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "pOdA8DIDmIQm8fHz",
+          "name": "Personal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"comments\": \"str\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        208
+      ],
+      "id": "9ef83f41-2b7d-4b2a-bceb-154dbe9ac323",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54f3842f-8373-4b92-8451-737ca89ae213",
+              "name": "comments",
+              "value": "={{ $json.output.comments }}",
+              "type": "string"
+            },
+            {
+              "id": "33b1f29c-0214-4581-aeb9-20b2c872bd2c",
+              "name": "time_last_update_unix",
+              "value": "={{ $('HTTP Request').item.json.time_last_update_unix }}",
+              "type": "number"
+            },
+            {
+              "id": "b72d3e74-050d-4f33-b09b-355fbcd3bc76",
+              "name": "provider",
+              "value": "={{ $('HTTP Request').item.json.provider }}",
+              "type": "string"
+            },
+            {
+              "id": "fe110368-a4a2-4e56-8733-8d012900e59f",
+              "name": "result",
+              "value": "={{ $('HTTP Request').item.json.result }}",
+              "type": "string"
+            },
+            {
+              "id": "3ce3b4a3-fae3-41ed-bba5-2df26d1fa07a",
+              "name": "MXN",
+              "value": "={{ $('HTTP Request').item.json.rates.MXN }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        0
+      ],
+      "id": "72bce4fa-30d7-406d-b49a-fbefdd67fdad",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "30e7d261-7d19-4d84-afc4-b7ea4ad641be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e25f1ffae57dd4eae99619f790e6326246805697231f1ad21f2d592181ce28a1"
+  },
+  "id": "03JoFLSmEVJV8TGP",
+  "tags": []
+}

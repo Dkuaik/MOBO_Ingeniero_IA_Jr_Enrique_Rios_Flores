@@ -26,7 +26,6 @@ RUN pip install --no-cache-dir uv \
 # Copy source code
 COPY src/ ./src/
 COPY main.py ./
-COPY scripts/ ./scripts/
 
 # Create data directory
 RUN mkdir -p docs

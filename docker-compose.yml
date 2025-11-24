@@ -141,8 +141,7 @@ services:
         condition: service_healthy
     networks:
       - ai_api_network
-    profiles:
-      - tools
+
 
 
 

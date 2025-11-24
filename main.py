@@ -12,6 +12,7 @@ from clients.mongodb.mongodb_client import MongoDBClient
 from config.settings import MONGODB_URI, DATABASE_NAME, ROLE_MAPPING
 from sentence_transformers import SentenceTransformer
 from datetime import datetime, timezone
+import asyncio
 
 app = FastAPI(title="MOBO Chat Interface")
 
@@ -31,9 +32,14 @@ async def chat_interface():
             form { margin-bottom: 10px; }
         </style>
     </head>
-    <body>
+    <body onload="updateSummary()">
         <h1>MOBO Chat Interface</h1>
-        
+
+        <h2>FAISS Vector Management</h2>
+        <div id="faiss-summary">Loading FAISS summary...</div>
+        <button onclick="loadDocuments()">Load Documents</button>
+        <button onclick="clearIndex()">Clear All</button>
+
         <div>
             <label>RAG Role:
                 <select id="rag_role">
@@ -85,6 +91,31 @@ async def chat_interface():
             
             function openMongoExpress() {
                 window.open('http://admin:express123@localhost:8081', '_blank');
+            }
+
+            async function updateSummary() {
+                const response = await fetch('/faiss_summary');
+                const data = await response.json();
+                const summaryDiv = document.getElementById('faiss-summary');
+                if (data.error) {
+                    summaryDiv.textContent = `Error: ${data.error}`;
+                } else {
+                    summaryDiv.textContent = `Status: ${JSON.stringify(data.status)}, Vectors: ${data.count}`;
+                }
+            }
+
+            async function loadDocuments() {
+                const response = await fetch('/load_documents', {method: 'POST'});
+                const data = await response.json();
+                alert(data.message || data.error);
+                updateSummary();
+            }
+
+            async function clearIndex() {
+                const response = await fetch('/clear_faiss', {method: 'POST'});
+                const data = await response.json();
+                alert(data.message || data.error);
+                updateSummary();
             }
         </script>
     </body>
@@ -157,6 +188,38 @@ async def chat(request: Request):
     mongo_client.insert_document("interactions", interaction)
 
     return {"response": response}
+
+@app.get("/faiss_summary")
+async def get_faiss_summary():
+    try:
+        faiss_client = FAISSClient(base_url="http://faiss:8001")
+        loop = asyncio.get_event_loop()
+        status = await loop.run_in_executor(None, faiss_client.get_status)
+        vectors = await loop.run_in_executor(None, faiss_client.get_all_vectors)
+        count = len(vectors)
+        return {"status": status, "count": count}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/load_documents")
+async def load_documents_endpoint():
+    try:
+        faiss_client = FAISSClient(base_url="http://faiss:8001")
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, faiss_client.load_documents)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/clear_faiss")
+async def clear_faiss_endpoint():
+    try:
+        faiss_client = FAISSClient(base_url="http://faiss:8001")
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, faiss_client.clear_index)
+        return {"message": "Index cleared"}
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=3000)

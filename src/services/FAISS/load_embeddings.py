@@ -39,12 +39,12 @@ def split_text_with_overlap(text: str, max_chunk_size: int, overlap_size: int):
             break
     return chunks
 
-def load_embeddings():
+def load_embeddings(faiss_url: str = "http://localhost:8001"):
     # Initialize the sentence transformer model
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
     # Initialize clients
-    faiss_client = FAISSClient()
+    faiss_client = FAISSClient(base_url=faiss_url)
     mongo_client = MongoDBClient(uri=MONGODB_URI, database_name=DATABASE_NAME)
 
     # Directory containing the documents

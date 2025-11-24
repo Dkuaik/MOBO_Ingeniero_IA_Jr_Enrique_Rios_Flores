@@ -22,13 +22,16 @@ NOTA: Al Tener una Arquitectura de microservicios y logica del codigo desacoplad
 2. Ejecuta el siguiente comando para construir y levantar todos los servicios:
 
    ```bash
-   docker compose up
+   docker compose up -d
    ```
 
    NOTA: Al tener una arquitectura de microservicios y lógica del código desacoplada, el primer build puede ser un poco tardado.
 
 3. Una vez que todos los servicios estén corriendo, accede a la interfaz web en `http://localhost:3000`.
 4. Para gestionar la base de datos, usa Mongo Express en `http://localhost:8081` (usuario: admin, contraseña: express123, deje un boton en la interfaz principal para poder acceder facilmente).
+
+## Carga de datos al RAG
+Se carga corriendo el script que esta en src/services/FAISS/load_embeddings.py (tuve un problema para exponer este esta función como una extensión del cliente, sin tiempo para debuggear)
 
 ## Arquitectura
 

@@ -36,7 +36,7 @@ Se puede correr siguiendo los siguientes comandos
 *Se requiere tener instalado uv como manejador de paquetes
    ```bash
    uv sync
-   uv python src/services/FAISS/load_embeddings.py
+   uv run python -m src.services.FAISS.load_embeddings
    ```
 ## Arquitectura
 

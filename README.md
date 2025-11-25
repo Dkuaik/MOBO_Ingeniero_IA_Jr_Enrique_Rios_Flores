@@ -7,7 +7,7 @@ Este repositorio contiene el proyecto MOBO para Ingeniero IA Jr por Enrique Rios
 El proyecto **MOBO_Ingeniero_IA_Jr_Enrique_Rios_Flores** es una aplicación de chatbot de IA desarrollada en Python utilizando FastAPI como framework principal. Está diseñado para proporcionar una interfaz de chat interactiva con funcionalidades avanzadas como RAG (Retrieval-Augmented Generation) y soporte para herramientas MCP (Model Context Protocol). 
 Todo el proyecto está hecho con una arquitectura de microservicios dockerizados.
 
-Pensando también en los problemas planteados en el examen teorico quise pantear un mcp para la 
+Pensando también en los problemas planteados en el examen teorico hice una base de datos no realacional donde se guardan las interacciones de los usuarios. 
 
 NOTA: Al Tener una Arquitectura de microservicios y logica del codigo desacoplada puede ser que el primer build de la app sea un poco tardado. La mayor parte del tiempo se la lleva al descarga de sentence-transformers.
  
@@ -31,8 +31,13 @@ NOTA: Al Tener una Arquitectura de microservicios y logica del codigo desacoplad
 4. Para gestionar la base de datos, usa Mongo Express en `http://localhost:8081` (usuario: admin, contraseña: express123, deje un boton en la interfaz principal para poder acceder facilmente).
 
 ## Carga de datos al RAG
-Se carga corriendo el script que esta en src/services/FAISS/load_embeddings.py (tuve un problema para exponer este esta función como una extensión del cliente, sin tiempo para debuggear)
-
+Se carga corriendo el script que esta en src/services/FAISS/load_embeddings.py (tuve un problema para exponer este esta función como una extensión del cliente, sin tiempo para debuggear). 
+Se puede correr siguiendo los siguientes comandos 
+*Se requiere tener instalado uv como manejador de paquetes
+   ```bash
+   uv sync
+   uv python src/services/FAISS/load_embeddings.py
+   ```
 ## Arquitectura
 
 ### 1. API Principal y Interfaz de Usuario
